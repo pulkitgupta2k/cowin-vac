@@ -70,13 +70,18 @@ def find_vac(district_id):
 
 def driver():
     for receiver in receivers:
-        centers = find_vac(receiver['dist_id'])
+        centers = []
+        for dist in receiver['dist_ids']:
+            center = find_vac(dist)
+            if len(center) == 0:
+                continue
+            centers.extend(center)
         if len(centers) == 0:
             continue
         subject = "VACCINE SLOTS FOUND NEAR YOU"
         msg = "VACCINE SLOTS FOUND\n\n\n\n"
         for center in centers:
-            msg += f"ADDRESS: {center['name']},\n{center['address']}, {center['district_name']},\n{center['state_name']}, \n{center['pincode']}\nFEES: {center['fee_type']}\n\n"
+            msg += f"ADDRESS: \n{center['name']},\n{center['address']}, {center['district_name']},\n{center['state_name']}, \n{center['pincode']}\nFEES: {center['fee_type']}\n\n"
             for session in center['sessions']:
                 if session['available_capacity'] > 0:
                     msg += f"DATE: {session['date']} \nAVAILABILITY: {session['available_capacity']} \nVACCINE: {session['vaccine']}\n"
