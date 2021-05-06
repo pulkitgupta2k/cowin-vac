@@ -3,5 +3,5 @@ sender_pass = "pass"
 
 receivers = [{
     "email": "rec@gmail.com",
-    "dist_id": "1"
+    "dist_id": ["1"]
 }]
