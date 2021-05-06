@@ -26,10 +26,8 @@ def make_id():
         for district in districts:
             data[state['state_name']][district['district_name']
                                       ] = district['district_id']
-
-    pprint(data)
-    # with open("districts.json", "w") as f:
-    #     json.dump(data, f)
+    with open("districts.json", "w") as f:
+        json.dump(data, f)
 
 
 def send_mail(receiver_address, mail_content, subject):
@@ -48,7 +46,6 @@ def send_mail(receiver_address, mail_content, subject):
     text = message.as_string()
     session.sendmail(sender_address, receiver_address, text)
     session.quit()
-    print('Mail Sent')
 
 
 def find_vac(district_id):
@@ -57,14 +54,12 @@ def find_vac(district_id):
     centers = []
     for i in range(4):
         day = (today+timedelta(days=7*i)).strftime("%d-%m-%Y")
-        print(day)
         parameters = {"district_id": district_id, "date": day}
         data = getJSON(link, parameters)
         for center in data['centers']:
             for session in center['sessions']:
                 if session['available_capacity'] > 0 and session['min_age_limit'] == 18:
                     centers.append(center)
-    pprint(centers)
     return centers
 
 
@@ -86,7 +81,7 @@ def driver():
                 if session['available_capacity'] > 0:
                     msg += f"DATE: {session['date']} \nAVAILABILITY: {session['available_capacity']} \nVACCINE: {session['vaccine']}\n"
             msg += "************************************************\n\n"
-        print(msg)
+        # print(msg)
         send_mail(receiver['email'], mail_content=msg, subject=subject)
 
 
